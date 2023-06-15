@@ -17,3 +17,7 @@ node_modules
 
 # Package manager
 yarn-error.log
+
+#config
+config/local.json
+
