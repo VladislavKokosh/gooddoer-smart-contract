@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.20;
 
 import {IGooddoerFactory} from "./interfaces/IGooddoerFactory.sol";
 import {AccessControlEnumerable, EnumerableSet} from "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
@@ -37,8 +37,8 @@ contract GooddoerFactory is IGooddoerFactory, AccessControlEnumerable {
     constructor(address admin_, address operator_) {
         require(admin_ != address(0), "GooddoerFactory: Admin is zero address");
         require(operator_ != address(0), "GooddoerFactory: Operator is zero address");
-        grantRole(DEFAULT_ADMIN_ROLE, admin_);
-        grantRole(OPERATOR_ROLE, operator_);
+        _grantRole(DEFAULT_ADMIN_ROLE, admin_);
+        _grantRole(OPERATOR_ROLE, operator_);
     }
 
     function createFundraiser(
@@ -46,11 +46,21 @@ contract GooddoerFactory is IGooddoerFactory, AccessControlEnumerable {
         address beneficiary,
         Document calldata document
     ) external returns (bool) {
-        bytes memory bytecode = type(Fundraiser).creationCode;
+        require(fundraisingAmount != 0, "GooddoerFactory: Fundraising amount lte zero");
+        require(beneficiary != address(0), "GooddoerFactory: Beneficiary is zero address");
+        require(document.name != bytes32(0), "GooddoerFactory: Document name is zero bytes");
+        require(bytes(document.uri).length > 0, "GooddoerFactory: Document uri is empty");
+        bytes memory bytecode = abi.encodePacked(
+            type(Fundraiser).creationCode,
+            abi.encode(fundraisingAmount, beneficiary, document)
+        );
         bytes32 salt = keccak256(abi.encodePacked(fundraisingAmount, beneficiary, document.name, document.uri));
         address fundraiser;
         assembly {
             fundraiser := create2(0, add(bytecode, 32), mload(bytecode), salt)
+            if iszero(extcodesize(fundraiser)) {
+                revert(0, 0)
+            }
         }
         _fundraisers.add(fundraiser);
         emit FundraiserCreated(fundraiser, fundraisingAmount, beneficiary, document.name, document.uri);

@@ -8,13 +8,6 @@ contract Fundraiser is IFundraiser {
     Document private _document;
 
     constructor(uint256 fundraisingAmount_, address beneficiary_, Document memory document_) {
-        require(fundraisingAmount_ != 0, "Fundraiser: Fundraising amount lte zero");
-        require(beneficiary_ != address(0), "Fundraiser: Beneficiary is zero address");
-        require(document_.name != bytes32(0), "Fundraiser: Document name is zero bytes");
-        require(
-            keccak256(abi.encodePacked(document_.uri)) == keccak256(abi.encodePacked("")),
-            "Fundraiser: Document uri is empty"
-        );
         _fundraisingAmount = fundraisingAmount_;
         _beneficiary = beneficiary_;
         _document = document_;
