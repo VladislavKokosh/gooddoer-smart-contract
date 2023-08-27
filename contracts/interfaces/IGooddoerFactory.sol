@@ -9,12 +9,13 @@ interface IGooddoerFactory is IFundraiserStruct {
         uint256 fundraisingAmount,
         address beneficiary,
         bytes32 documentName,
-        string documentUri
+        string documentUri,
+        bytes32 documentHash
     );
 
     function createFundraiser(
         uint256 fundraisingAmount,
         address beneficiary,
-        Document calldata document
+        DocumentParams calldata document
     ) external returns (bool);
 }

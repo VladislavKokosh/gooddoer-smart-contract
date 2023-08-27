@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.21;
 
 import {IGooddoerFactory} from "./interfaces/IGooddoerFactory.sol";
 import {AccessControlEnumerable, EnumerableSet} from "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
@@ -44,7 +44,7 @@ contract GooddoerFactory is IGooddoerFactory, AccessControlEnumerable {
     function createFundraiser(
         uint256 fundraisingAmount,
         address beneficiary,
-        Document calldata document
+        DocumentParams calldata document
     ) external returns (bool) {
         require(fundraisingAmount != 0, "GooddoerFactory: Fundraising amount lte zero");
         require(beneficiary != address(0), "GooddoerFactory: Beneficiary is zero address");
@@ -54,16 +54,19 @@ contract GooddoerFactory is IGooddoerFactory, AccessControlEnumerable {
             type(Fundraiser).creationCode,
             abi.encode(fundraisingAmount, beneficiary, document)
         );
-        bytes32 salt = keccak256(abi.encodePacked(fundraisingAmount, beneficiary, document.name, document.uri));
+        bytes32 salt = keccak256(
+            abi.encodePacked(fundraisingAmount, beneficiary, document.name, document.uri, document.hash)
+        );
         address fundraiser;
         assembly {
             fundraiser := create2(0, add(bytecode, 32), mload(bytecode), salt)
+
             if iszero(extcodesize(fundraiser)) {
                 revert(0, 0)
             }
         }
         _fundraisers.add(fundraiser);
-        emit FundraiserCreated(fundraiser, fundraisingAmount, beneficiary, document.name, document.uri);
+        emit FundraiserCreated(fundraiser, fundraisingAmount, beneficiary, document.name, document.uri, document.hash);
         return true;
     }
 }

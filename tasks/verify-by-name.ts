@@ -16,10 +16,10 @@ task("verify-by-name", "Verification of contracts whose names have been transfer
     for await (const item of names) {
       const { address, args, storageLayout } = await get(item);
 
-      console.log(`\n\u250F Contract: ${item} \n\u2517`);
-      console.log(`  \u2523 Storage: ${storageLayout.storage[0].contract}`);
-      console.log(`  \u2523 Address: ${address}`);
-      console.log(`  \u2517 Params: ${args} \n`);
+      console.log(`\n\u250F 📄 Contract: ${item} \n\u2517`);
+      console.log(`  \u2523 💾 Storage: ${storageLayout.storage[0].contract}`);
+      console.log(`  \u2523 🏷 Address: ${address}`);
+      console.log(`  \u2517 📦 Params: ${args} \n`);
 
       try {
         await run("verify:verify", {
@@ -41,7 +41,7 @@ task("verify-by-name", "Verification of contracts whose names have been transfer
     }
 
     console.info("\x1b[36m%s\x1b[0m", `\nTotal contracts for verification: [${names.length}]`);
-    console.info("\x1b[32m%s\x1b[0m", `Success verify: [${success.length}]`);
+    console.info("\x1b[32m%s\x1b[0m", `✅ Success verify: [${success.length}]`);
 
     for (const item of success) {
       console.log("\x1b[32m%s\x1b[0m", `✔ - ${item}`);
