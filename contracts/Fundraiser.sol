@@ -29,15 +29,17 @@ contract Fundraiser is IFundraiser, ERC1643, AccessControl {
         _setDocument(document.name, document.uri, document.hash);
     }
 
-    function _setDocument(
+    function setDocument(
         bytes32 documentName,
         string memory uri,
         bytes32 documentHash
-    ) internal override onlyRole(ADMIN_ROLE) {
-        super._setDocument(documentName, uri, documentHash);
+    ) external onlyRole(ADMIN_ROLE) returns (bool) {
+        _setDocument(documentName, uri, documentHash);
+        return true;
     }
 
-    function _removeDocument(bytes32 documentName) internal override onlyRole(ADMIN_ROLE) {
-        super._removeDocument(documentName);
+    function removeDocument(bytes32 documentName) external onlyRole(ADMIN_ROLE) returns (bool) {
+        _removeDocument(documentName);
+        return true;
     }
 }

@@ -26,17 +26,7 @@ abstract contract ERC1643 is IERC1643 {
         }
     }
 
-    function setDocument(bytes32 documentName, string memory uri, bytes32 documentHash) external returns (bool) {
-        _setDocument(documentName, uri, documentHash);
-        return true;
-    }
-
-    function removeDocument(bytes32 documentName) external returns (bool) {
-        _removeDocument(documentName);
-        return true;
-    }
-
-    function _setDocument(bytes32 documentName, string memory uri, bytes32 documentHash) internal virtual {
+    function _setDocument(bytes32 documentName, string memory uri, bytes32 documentHash) internal {
         require(documentName != bytes32(0), "");
         require(bytes(uri).length > 0, "");
         if (_documents[documentName].lastModified == 0) {
@@ -46,7 +36,7 @@ abstract contract ERC1643 is IERC1643 {
         emit DocumentUpdated(documentName, uri, documentHash);
     }
 
-    function _removeDocument(bytes32 documentName) internal virtual {
+    function _removeDocument(bytes32 documentName) internal {
         Document memory document = _documents[documentName];
         require(document.lastModified != 0, "Document doesnt exist");
         _docsHashes.remove(document.docHash);
