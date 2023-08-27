@@ -9,15 +9,14 @@ const migrate: DeployFunction = async ({ deployments, getNamedAccounts }) => {
   const admin = deployer;
   const operator = deployer;
 
-  console.log(deployer);
+  console.log(`🚀 Deployer: ${deployer}`);
 
-  // Оценка стоимости деплоя
   const GooddoerFactory = await ethers.getContractFactory("GooddoerFactory");
   const estimatedGas = await ethers.provider.estimateGas(GooddoerFactory.getDeployTransaction(admin, operator));
   const gasPrice = await ethers.provider.getGasPrice();
   const estimatedCost = estimatedGas.mul(gasPrice);
 
-  console.log(`Estimated deployment cost: ${ethers.utils.formatEther(estimatedCost)} ETH`);
+  console.log(`🚀 Estimated deployment cost: ${ethers.utils.formatEther(estimatedCost)} ETH`);
 
   await deploy("GooddoerFactory", {
     from: deployer,

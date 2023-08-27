@@ -30,7 +30,8 @@
     "verify:polygon": "NODE_APP_INSTANCE=polygon hardhat verify-by-name --network polygon --contracts",
     "verify:polygonMumbai": "NODE_APP_INSTANCE=polygonMumbai hardhat verify-by-name --network polygonMumbai --contracts",
     "verify:bsc": "NODE_APP_INSTANCE=bsc hardhat verify-by-name --network bsc --contracts",
-    "verify:bscTestnet": "NODE_APP_INSTANCE=bscTestnet hardhat verify-by-name --network bscTestnet --contracts"
+    "verify:bscTestnet": "NODE_APP_INSTANCE=bscTestnet hardhat verify-by-name --network bscTestnet --contracts",
+    "create-fundraiser:goerli": "NODE_APP_INSTANCE=goerli hardhat create-fundraiser --network goerli --contract"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.0"
